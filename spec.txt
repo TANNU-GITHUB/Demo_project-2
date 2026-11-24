@@ -1,0 +1,26 @@
+# Project Specification: MiniStore Web Application
+
+## Requirements Overview
+This project is a lightweight Flask e-commerce web application with an SQLite database and a browser frontend.
+
+### REQ-1: Inventory Listing
+The application must store products in an SQLite database. The route `GET /api/products` must return all available products with id, name, price, and available stock.
+
+### REQ-2: Order Total Calculation
+The function `calculate_order_total(price, quantity, discount_code)` calculates the final order amount.
+- Quantity must be strictly greater than 0; any non-positive quantity (<= 0) must raise a `ValueError` with "Quantity must be positive".
+- Price must be non-negative (>= 0); negative price must raise a `ValueError` with "Price cannot be negative".
+- The discount code "DISCOUNT10" gives a 10% discount on the subtotal.
+- If order total exceeds $100 after discount, free shipping applies; otherwise, add $5 shipping fee.
+
+### REQ-3: Order Placement API
+The endpoint `POST /api/orders` creates a new customer order.
+- It accepts JSON payload: `{"product_id": int, "quantity": int, "discount_code": str}`.
+- If product is out of stock or requested quantity exceeds available stock, return HTTP 400 with `{"error": "Insufficient stock"}`.
+- If successful, deduct the ordered quantity from the product stock in SQLite and return HTTP 201 with order details and final total.
+
+### REQ-4: Web Storefront Interface
+The root route `GET /` serves the storefront HTML page displaying products, stock, and an interactive order form with a "Place Order" button.
+
+### REQ-5: Analytics and Reports
+The route `GET /analytics` must display store summary statistics and inventory metrics.
